@@ -2,6 +2,15 @@
 
 <%= render @task %>
 
+<h1><%= @task.title %></h1>
+<p><%= @task.completed ? 'Completed' : 'Not Completed' %></p>
+
+<h3>Subtasks</h3>
+<% @task.sub_tasks.each do |sub_task| %>
+  <p><%= sub_task.title %> - <%= sub_task.completed ? '✔️' : '❌' %></p>
+<% end %>
+
+
 <div>
   <%= link_to "Edit this task", edit_task_path(@task) %> |
   <%= link_to "Back to tasks", tasks_path %>

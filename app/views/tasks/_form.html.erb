@@ -1,27 +1,35 @@
-<%= form_with(model: task) do |form| %>
-  <% if task.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
-
+<%= form_with(model: @task, local: true) do |form| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
       <ul>
-        <% task.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% @task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
   <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+    <%= form.label :title %>
+    <%= form.text_field :title, class: 'form-control' %>
   </div>
 
   <div>
-    <%= form.label :completed, style: "display: block" %>
-    <%= form.checkbox :completed %>
+    <%= form.label :completed %>
+    <%= form.check_box :completed %>
   </div>
 
-  <div>
-    <%= form.submit %>
-  </div>
+  <h3>Subtasks</h3>
+  <%= form.fields_for :sub_tasks do |sub_task_fields| %>
+    <div class="nested-fields">
+      <%= sub_task_fields.label :title, 'Subtask Title' %>
+      <%= sub_task_fields.text_field :title, class: 'form-control' %>
+
+      <%= sub_task_fields.label :completed, 'Completed' %>
+      <%= sub_task_fields.check_box :completed %>
+    </div>
+  <% end %>
+
+  <%= form.submit 'Save Task', class: 'btn btn-primary' %>
 <% end %>
