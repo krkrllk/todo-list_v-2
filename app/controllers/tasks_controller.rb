@@ -1,19 +1,20 @@
 class TasksController < ApplicationController
+  before_action :authenticate_user!  # Ensure the user is logged in
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
   def index
-    @tasks = Task.includes(:sub_tasks).all
+    @tasks = current_user.tasks.includes(:sub_tasks)  # Fetch tasks for the logged-in user
   end
 
   def show; end
 
   def new
     @task = Task.new
-    @task.sub_tasks.build # Build an empty subtask for the form
+    @task.sub_tasks.build  # Build an empty subtask for the form
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)  # Associate task with the logged-in user
 
     if @task.save
       redirect_to tasks_path, notice: 'Task and subtasks successfully created.'
@@ -23,7 +24,7 @@ class TasksController < ApplicationController
   end
 
   def edit
-    @task.sub_tasks.build if @task.sub_tasks.empty? # Build empty subtask fields if none exist
+    @task.sub_tasks.build if @task.sub_tasks.empty?  # Build empty subtask fields if none exist
   end
 
   def update
@@ -42,7 +43,7 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])  # Ensure only tasks for the logged-in user are accessible
   end
 
   def task_params

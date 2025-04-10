@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resource :session
   resources :passwords, param: :token
   resources :tasks
